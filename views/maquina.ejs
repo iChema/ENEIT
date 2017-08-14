@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<style>
+    .button {
+        display: inline-block;
+        padding: 15px 25px;
+        font-size: 24px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #999;
+    }
+
+    .button:hover {background-color: #3e8e41}
+
+    .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+</style>
+    <head>
+        <title><%= title %></title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <% include ../partials/nav %>
+
+        <div class="container">
+            <h3>Suajadora de puente móvil</h3>
+            <div class="panel panel-default">
+                <div class="panel-heading">Posición del Pistón</div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div id="1" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50"
+                             aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                            50% Complete (info)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td><center><h4><span id="2" class="label label-default">Etapa 1</span></h4></center></td>
+                        <td><center><h4><span id="3" class="label label-default">Etapa 2</span></h4></center></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Sensor de Posición 1</div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div id="4" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50"
+                             aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                            50% Complete (info)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Sensor de Posición 2</div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div id="5" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50"
+                             aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                            50% Complete (info)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Control</div>
+                <div class="panel-body" style="background-color: dimgrey">
+                    <div style="width: 50%;height: 100%;display: inline-block;padding-top: 20px" align="center" >
+                        <button type="button" class="btn btn-danger btn-lg">Emergencia</button>
+                        <button type="button" class="btn btn-success btn-lg">Start</button>
+                        <button type="button" class="btn btn-warning btn-lg">Stop</button>
+                    </div>
+                    <div style="width: 50%;height: 100%;display: inline-block;float: right;" align="center">
+                        <button class="button"><img src="images/l.png"></button>
+                        <button class="button"><img src="images/r.png"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        setInterval(sensor1, 100);
+        setInterval(sensor2, 100);
+        setInterval(sensor3, 100);
+        setInterval(sensor4, 100);
+        setInterval(sensor5, 100);
+
+        function sensor1() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 1
+                },
+                function (data) {
+                    resultado = data;
+                    aux = (resultado[0].valor * 100) / 17;
+                    $('#1').css('width', aux+'%').attr('aria-valuenow', aux);
+                    $('#1').html(aux.toFixed(0)+'%');
+
+                }
+            );
+        }
+        function sensor2() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 2
+                },
+                function (data) {
+                    resultado = data;
+                    console.log(resultado[0].valor);
+                    if(resultado[0].valor == 0) $('#2').removeClass('label-success').addClass('label-default');
+                    else $('#2').removeClass('lable-default').addClass('label-success');
+
+                }
+            );
+        }
+        function sensor3() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 3
+                },
+                function (data) {
+                    resultado = data;
+                    if(resultado[0].valor == 0) $('#3').removeClass('label-success').addClass('label-default');
+                    else $('#3').removeClass('lable-default').addClass('label-success');
+                }
+            );
+        }
+        function sensor4() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 4
+                },
+                function (data) {
+                    resultado = data;
+                    aux = ((resultado[0].valor - 15) * 100) / 75;
+                    $('#4').css('width', aux+'%').attr('aria-valuenow', aux);
+                    $('#4').html(aux.toFixed(0)+'%');
+                }
+            );
+        }
+        function sensor5() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 5
+                },
+                function (data) {
+                    resultado = data;
+                    aux = ((resultado[0].valor - 17) * 100) / 73;
+                    $('#5').css('width', aux+'%').attr('aria-valuenow', aux);
+                    $('#5').html(aux.toFixed(0)+'%');
+                }
+            );
+        }
+        function sensor6() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 6
+                },
+                function (data) {
+                    resultado = data;
+                }
+            );
+        }
+        function sensor7() {
+            var id_maquina = 1;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 7
+                },
+                function (data) {
+                    resultado = data;
+                    console.log(resultado[0].valor);
+                }
+            );
+        }
+        function sensor8() {
+            var id_maquina = 8;
+            $.post("/requests/maquina",
+                {
+                    id_maquina: id_maquina,
+                    numSensor: 1
+                },
+                function (data) {
+                    resultado = data;
+                    console.log(resultado[0].valor);
+                }
+            );
+        }
+
+
+    </script>
+    </body>
+</html>
